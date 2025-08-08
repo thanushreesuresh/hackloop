@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chali Meter 🤖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Comic Neue', cursive;
+      background: linear-gradient(135deg, #fff0f5, #ffe4e1);
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 3em;
+      color: #ff1493;
+      margin-bottom: 10px;
+    }
+    h2 {
+      font-size: 1.5em;
+      color: #ff1493;
+      margin-top: 20px;
+      font-style: italic;
+    }
+    form {
+      margin: 20px auto;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1.2em;
+      border-radius: 10px;
+      border: 2px solid #ff69b4;
+    }
+    button {
+      padding: 12px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 10px;
+      background-color: #ff69b4;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #ff1493;
+    }
+    .response-box {
+      margin-top: 20px;
+      background-color: #fff0f5;
+      border-left: 8px solid #ff69b4;
+      padding: 15px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      display: flex;
+      align-items: center;
+    }
+    .response-box img {
+      max-width: 150px;
+      max-height: 150px;
+      margin-right: 20px;
+    }
+    canvas {
+      margin-top: 40px;
+      background-color: #ffffffcc;
+      border-radius: 15px;
+      padding: 20px;
+    }
+    ul.courses {
+      margin-top: 40px;
+      text-align: left;
+      display: inline-block;
+      font-size: 1.1em;
+    }
+    ul.courses li::before {
+      content: '📚 ';
+    }
+  </style>
+</head>
+<body>
+  <h1>Chali-Meter🤖</h1>
+  <h2>"Where jokes meet their destiny!"</h2>
+  <h3>The world doesn't need serious people ... it needs Chali Masters!</h3>
+  <form action="/" method="post">
+    <input type="text" name="joke" placeholder="Enter your joke here..." required>
+    <button type="submit">Submit Joke</button>
+  </form>
+
+  {% if rating %}
+  <div class="response-box">
+    <strong>🎯 Rating:</strong> {{ rating }} / 10
+  </div>
+  {% endif %}
+
+  {% if seconds %}
+  <div class="response-box">
+    <strong style="font-size: 5em;">⏱️</strong> CHIRI TIMER: {{ seconds }} seconds
+  </div>
+  {% endif %}
+
+  {% if sticker_url %}
+  <div class="response-box" style="display: flex; align-items: center; justify-content: flex-start;">
+    <img src="{{ sticker_url }}" alt="Random Sticker" style="max-width: 150px; max-height: 150px; margin-right: 20px;">
+    <div>
+      {% if response %}
+        <p>{{ response }}</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if scores|length > 0 %}
+  <h2>📈 Your Joke Improvement Progress</h2>
+  <canvas id="jokeChart" width="500" height="250"></canvas>
+  <script>
+    const ctx = document.getElementById('jokeChart').getContext('2d');
+    const jokeScores = JSON.parse('{{ scores|tojson|safe }}');
+    const labels = jokeScores.map((_, i) => `Joke ${i + 1}`);
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Joke Quality Score (1–10)',
+          data: jokeScores,
+          borderColor: '#ff1493',
+          backgroundColor: '#ffe4e1',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            min: 0,
+            max: 10
+          }
+        }
+      }
+    });
+  </script>
+  {% endif %}
+
+  {% if scores|length > 0 %}
+  <h2>📈 Joke Ratings Over Time</h2>
+  <canvas id="jokeRatingChart" width="500" height="250"></canvas>
+  <script>
+    const ctxRating = document.getElementById('jokeRatingChart').getContext('2d');
+    const jokeRatingScores = JSON.parse('{{ scores|tojson|safe }}');
+    const labelsRating = jokeRatingScores.map((_, i) => `Joke ${i + 1}`);
+
+    new Chart(ctxRating, {
+      type: 'bar',
+      data: {
+        labels: labelsRating,
+        datasets: [{
+          label: 'Joke Rating (1–10)',
+          data: jokeRatingScores,
+          backgroundColor: '#ff69b4',
+          borderColor: '#ff1493',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 10
+          }
+        }
+      }
+    });
+  </script>
+  {% endif %}
+
+  <h2>🎓 Useless Courses to Become a Joke Master</h2>
+  <ul class="courses">
+    <li>Advanced PhD in Dad Jokes <a href="/dad_jokes_course" style="margin-left: 10px; padding: 5px 10px; font-size: 0.9em; text-decoration: none; background-color: #ff69b4; color: white; border-radius: 5px; display: inline-block; text-align: center;">Enroll</a></li>
+    <li>Bachelor's in Chali <a href="/bachelors_in_chali" style="margin-left: 10px; padding: 5px 10px; font-size: 0.9em; text-decoration: none; background-color: #ff69b4; color: white; border-radius: 5px; display: inline-block; text-align: center;">Enroll</a></li>
+  </ul>
+
+  <div style="margin-top: 40px; padding: 20px; border: 2px solid #ff69b4; border-radius: 10px; background-color: #fff0f5; text-align: center;">
+    <h2>💞 Chali Vibe Matcher</h2>
+    <a href="/chali_matcher" style="padding: 10px 20px; font-size: 1.2em; text-decoration: none; background-color: #ff69b4; color: white; border-radius: 5px; display: inline-block;">Go</a>
+  </div>
+</body>
+</html>

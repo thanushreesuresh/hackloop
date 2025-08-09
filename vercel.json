@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "sir_laughs_a_lot.py",
+      "src": "app.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
@@ -21,7 +21,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "sir_laughs_a_lot.py"
+      "dest": "app.py"
     }
   ]
 }
